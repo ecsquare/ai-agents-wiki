@@ -1,0 +1,5 @@
+.env
+*.xml
+.idea/ai-agents-wiki.iml
+langchain/.DS_Store
+.DS_Store
