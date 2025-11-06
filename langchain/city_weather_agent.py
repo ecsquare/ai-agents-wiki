@@ -1,8 +1,9 @@
-from langchain_ollama import ChatOllama
-from langchain.agents import create_agent
+
 import os
 from dotenv import load_dotenv
 import requests
+from langchain_ollama import ChatOllama
+from langchain.agents import create_agent
 
 load_dotenv()
 
@@ -23,12 +24,12 @@ agent = create_agent(
     model=llm,
     tools=[get_weather],
     system_prompt="You are a helpful assistant",
-    debug=True
+    debug=False
 )
 
 # Run the agent
 result = agent.invoke(
-    {"messages": [{"role": "user", "content": "what is the weather in Tunis"}]}
+    {"messages": [{"role": "user", "content": "what is the weather in London"}]}
 )
 
 print(result['messages'][-1].content)
