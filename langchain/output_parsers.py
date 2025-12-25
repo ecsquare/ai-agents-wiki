@@ -21,6 +21,9 @@ system_prompt = (
         "You do not have access to external tools for information retrieval."
     )
 
+#LangChain automatically uses ProviderStrategy when you pass a schema type directly to create_agent.response_format
+#For models that don’t support native structured output, LangChain uses tool calling to achieve the same result. This works with all models that support tool calling, which is most modern models.
+
 agent = create_agent(
     model=llm,
     tools=[],
@@ -31,4 +34,4 @@ agent = create_agent(
 result = agent.invoke({
     "messages": [{"role": "user", "content": "Analyze this review: 'Great product: 5 out of 5 stars. Fast shipping, but expensive'"}]
 })
-print(result["structured_response"].rating)
+print(result["structured_response"])
