@@ -171,6 +171,7 @@ async def generate_video(request: VideoRequest):
         # Generate images for each scene
         generated_images = []
         for idx, scene_prompt in enumerate(request.scenes):
+            scene_prompt = f"{scene_prompt}" if request.hero_description else scene_prompt
             print(f"Generating scene {idx + 1}/{len(request.scenes)}: {scene_prompt}")
             
             image = pipeline(
