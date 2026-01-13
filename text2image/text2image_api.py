@@ -25,6 +25,7 @@ class ImageRequest(BaseModel):
 
 class VideoRequest(BaseModel):
     scenes: List[str] = Field(..., description="List of scene descriptions/prompts")
+    hero_description: str = Field(default="", description="Description of main character to maintain consistency")
     num_inference_steps: int = 25
     duration_per_scene: float = Field(3.0, description="Duration in seconds for each scene")
     fps: int = Field(24, description="Frames per second")
@@ -228,17 +229,22 @@ async def generate_video(request: VideoRequest):
                       (request.transition_frames * (len(generated_images) - 1))
         total_duration = total_frames / request.fps
         
-        print(f"Video generated: {video_path}")
+        print(f"\nVideo generated successfully: {video_path}")
+        print("="*80 + "\n")
+        
+        # Create metadata about prompts used
+        response_headers = {
+            "X-Video-Scenes": str(len(request.scenes)),
+            "X-Video-Duration": str(total_duration),
+            "X-Video-FPS": str(request.fps),
+            "X-Hero-Used": "true" if request.hero_description else "false"
+        }
         
         return FileResponse(
             video_path,
             media_type="video/mp4",
             filename=video_filename,
-            headers={
-                "X-Video-Scenes": str(len(request.scenes)),
-                "X-Video-Duration": str(total_duration),
-                "X-Video-FPS": str(request.fps)
-            }
+            headers=response_headers
         )
         
     except Exception as e:
